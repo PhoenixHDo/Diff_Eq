@@ -7,6 +7,8 @@ Condtions: Number of steps and step size must be valid, can not divide by zero
 
 """
 
+#testing version control
+
 from sympy import *
 
 #User defined parameters:
