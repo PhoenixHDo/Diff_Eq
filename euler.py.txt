@@ -1,0 +1,33 @@
+"""
+File: euler
+Authors: Phoenix Do, Jiashu Zhou, Sachin Letchumanan, Natasha
+Code: Euler's Method
+Description: Takes user imputted parameters (intial value for x and y, step size, differential equation, and value for which Euler's method will evaluate) and gives requested value using Euler's Method
+Condtions: Number of steps and step size must be valid, can not divide by zero
+
+"""
+
+from sympy import *
+
+#User defined parameters:
+diff_eq = x**2 - 4                                    #User defined differential Equation
+x0 = 1                                                #User defined initial value for x
+y0 = -2                                               #User defined initial value for y
+step = 0.0005                                         #User defined size of step for each iteration
+x_final = 22                                          #User defined value which code will approximate to
+
+
+def eulers(diff_eq, x0, y0, step, x_final):           #Sets up function
+    x = Symbol("x")
+    y = Symbol("y")
+    iterations = int((x_final - x0) / step)           #Determines how many times to loop
+    for i in range(iterations):                       #Sets up loop of iterations
+        slope = diff_eq.evalf(subs = {x: x0, y: y0})  #Determines value of differntial equation at point to determine tangent line slope
+        y = slope * step + y0                         #Calculates next value using the equation: f(x) = f(x+1) + step(f'(x-1))
+        x0 += step
+        y0 = y
+    return y                                          #Returns new value for y in iteration
+
+iterations = int((x_final - x0) / step)
+final_y = eulers(diff_eq, x0, y0, step, x_final)      #Runs function with user defined parameters
+print(" with " + str(iterations) + " steps, the value of f(" + str(x_final) + ") equals = " + str(final_y))
