@@ -7,16 +7,14 @@ Condtions: Number of steps and step size must be valid, can not divide by zero
 
 """
 
-#testing version control
-
 from sympy import *
 
 #User defined parameters:
-diff_eq = x**2 - 4                                    #User defined differential Equation
+diff_eq = 2 * x * y                                #User defined differential Equation
 x0 = 1                                                #User defined initial value for x
-y0 = -2                                               #User defined initial value for y
-step = 0.0005                                         #User defined size of step for each iteration
-x_final = 22                                          #User defined value which code will approximate to
+y0 = 1                                               #User defined initial value for y
+step = 0.1                                         #User defined size of step for each iteration
+x_final = 1.5                                         #User defined value which code will approximate to
 
 
 def eulers(diff_eq, x0, y0, step, x_final):           #Sets up function
@@ -25,10 +23,10 @@ def eulers(diff_eq, x0, y0, step, x_final):           #Sets up function
     iterations = int((x_final - x0) / step)           #Determines how many times to loop
     for i in range(iterations):                       #Sets up loop of iterations
         slope = diff_eq.evalf(subs = {x: x0, y: y0})  #Determines value of differntial equation at point to determine tangent line slope
-        y = slope * step + y0                         #Calculates next value using the equation: f(x) = f(x+1) + step(f'(x-1))
+        y_final = slope * step + y0                         #Calculates next value using the equation: f(x) = f(x+1) + step(f'(x-1))
         x0 += step
-        y0 = y
-    return y                                          #Returns new value for y in iteration
+        y0 = y_final
+    return y_final                                         #Returns new value for y in iteration
 
 iterations = int((x_final - x0) / step)
 final_y = eulers(diff_eq, x0, y0, step, x_final)      #Runs function with user defined parameters
