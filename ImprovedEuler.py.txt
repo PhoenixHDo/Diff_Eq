@@ -1,0 +1,29 @@
+"""
+File: euler
+Authors: Phoenix Do, Jiashu Zhou, Sachin Letchumanan, Natasha
+Code: Improved Euler's Method
+Description: Takes user imputed parameters (initial value for x and y, step size, differential equation, and value for which Euler's method will evaluate) and gives requested value using Improved Euler's Method
+Conditions: Number of steps and step size must be valid, cannot divide by zero
+
+"""
+from sympy import *
+
+# User defined parameters:
+x = Symbol("x")
+y = Symbol("y")
+diff_eq = 2 * x * y                                         # User defined differential Equation
+x0 = 1                                                        # User defined initial value for x
+y0 = 1                                                       # User defined initial value for y
+step = 0.1                                                   # User defined size of step for each iteration
+x_final = 1.5                                                  # User defined value which code will approximate to
+
+def Improved_Eulers(diff_eq, x0, y0, step, xf):
+    iterations = int((xf - x0) / step)
+    for i in range(iterations):
+        m = diff_eq.subs({x: x0, y: y0}).evalf()
+        y0 += (step/2) * (m + diff_eq.subs({x: x0 + (step), y : y0 + m * step})).evalf()
+        x0 += step
+    return y0
+
+final_y = Improved_Eulers(diff_eq, x0, y0, step, x_final)     # Run function with user defined parameters
+print("The value of f(" + str(x_final) + ") using Improved Euler's Method is: " + str(final_y))
