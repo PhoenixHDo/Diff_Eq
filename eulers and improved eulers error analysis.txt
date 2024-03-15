@@ -1,0 +1,75 @@
+"""
+File: Eulers and improved Euler's error analysis
+Authors: Phoenix Do
+Code: Eulers and improved Euler's error analysis
+Description: Takes user imputed parameters (initial value for x and y, step size, differential equation, and value for which Euler's method will evaluate) and gives error analysis
+Conditions: Number of steps and step size must be valid, cannot divide by zero
+
+"""
+from sympy import *
+import math
+
+# User defined parameters:
+x = Symbol("x")
+y = Symbol("y")
+diff_eq = 2 * x * y                                                                                         # User defined differential Equation
+x0 = 1                                                                                                      # User defined initial value for x
+y0 = 1                                                                                                      # User defined initial value for y
+step = 0.1                                                                                                  # User defined size of step for each iteration
+x_final = 1.5                                                                                               # User defined value which code will approximate to
+real_function = math.e ** ((x ** 2) - 1)
+
+
+def error_analysis_Eulers(diff_eq, real_function, x0, y0, step, x_final):
+    print("x       solved  real    diff    % error")                                                        # Headers
+    x = Symbol("x")
+    y = Symbol("y")
+    #printing intial condion
+    x_initial = x0
+    y_initial = y0
+    y_real_initial = real_function.evalf(subs = {x: x_initial, y: y_initial})                               # Solves for the real value of Y
+    if y_initial == y_real_initial:
+        absolute_difference_initial = 0                                                                     # Fixes issue with formatting when y_intial = y_real_intial
+    else:
+        absolute_difference_initial = abs(y_initial - y_real_initial)                                       # Calculates absolute difference between calculated and real Y
+    percent_error_initial = abs(y_initial - y_real_initial) / y_real_initial * 100                          # Calculates percent error between calculated and real Y
+    print(f"{x_initial:.2f}\t{y_initial:.5f}\t{y_real_initial:.5f}\t{absolute_difference_initial:.5f}\t{percent_error_initial}%")
+    iterations = int((x_final - x0) / step)
+    for i in range(iterations):
+        slope = diff_eq.evalf(subs = {x: x0, y: y0})                                                        # Calculates slope at the point
+        y_final = slope * step + y0                                                                         # Calculates Y value at the point
+        y0 = y_final
+        x0 += step
+        y_real = real_function.evalf(subs = {x: x0, y: y0})                                                 # Solves for the real value of Y at that point
+        absolute_difference = abs(y_final - y_real)                                                         # Calculates absolute difference between calculated and real Y
+        percent_error = abs(y_final - y_real) / y_real * 100                                                # Calculates percent error between calculated and real Y
+        print(f"{x0:.2f}\t{y_final:.5f}\t{y_real:.5f}\t{absolute_difference:.5f}\t{percent_error:.2f}%")
+
+
+def error_analysis_improved_Eulers(diff_eq, real_function, x0, y0, step, x_final):
+    print("x       solved  real    diff    % error")                                                        # Header
+    x = Symbol("x")
+    y = Symbol("y")
+    x_initial = x0
+    y_initial = y0
+    y_real_initial = real_function.evalf(subs = {x: x_initial, y: y_initial})                               # Solves for the real value of Y at that point
+    if y_initial == y_real_initial:                                                                         # Fixes issue with formatting when y_intial = y_real_intial
+        absolute_difference_initial = 0
+    else:
+        absolute_difference_initial = abs(y_initial - y_real_initial)                                       # Calculates absolute difference between calculated and real Y
+    percent_error_initial = abs(y_initial - y_real_initial) / y_real_initial * 100                          # Calculates percent error between calculated and real Y
+    print(f"{x_initial:.2f}\t{y_initial:.5f}\t{y_real_initial:.5f}\t{absolute_difference_initial:.5f}\t{percent_error_initial}%")
+    iterations = int((x_final - x0) / step)
+    for i in range(iterations):
+        slope = diff_eq.subs({x: x0, y: y0}).evalf()                                                        # Calculates slope at the point
+        y_final = y0 + (step / 2) * (slope + diff_eq.subs({x: x0 + (step), y : y0 + slope * step})).evalf() # Calculates Y value at the point
+        y0 = y_final
+        x0 += step
+        y_real = real_function.evalf(subs = {x: x0, y: y0})                                                 # Solves for the real value of Y at that point
+        absolute_difference = abs(y_final - y_real)                                                         # Calculates absolute difference between calculated and real Y
+        percent_error = abs(y_final - y_real) / y_real * 100                                                # Calculates percent error between calculated and real Y
+        print(f"{x0:.2f}\t{y_final:.5f}\t{y_real:.5f}\t{absolute_difference:.5f}\t{percent_error:.2f}%")
+
+
+error_analysis_Eulers(diff_eq, real_function, x0, y0, step, x_final)                                        # Runs error analysis on Euler's method
+error_analysis_improved_Eulers(diff_eq, real_function, x0, y0, step, x_final)                               # Runs error analysis on improved Euler's method
