@@ -1,0 +1,37 @@
+"""
+File: RK4
+Author: Phoenix Do
+Code: RK4
+Description: Takes user imputted parameters (intial value for x and y, step size, differential equation, and value for which Euler's method will evaluate) and gives requested value using RK4
+Conditions: none
+
+"""
+from sympy import *
+
+# User defined parameters
+x = Symbol("x")
+y = Symbol("y")
+diff_eq = 2 * x * y                                                             # User defined differntial equation
+x0 = 1                                                                          # User defined intial value for x
+y0 = 1                                                                          # User defined intial vaule for y
+step = 0.1                                                                      # User defined size of step for each iteration
+x_final = 1.5                                                                   # User defined value which code will approximate to
+
+
+def RK4(diff_eq, x0, y0, step, x_final):
+    x = Symbol("x")
+    y = Symbol("y")
+    iterations = int((x_final - x0) / step)                                     # Determines amount of iterations
+    for i in range(iterations):
+        k1 = diff_eq.subs({x: x0, y: y0})                                       # Solves for k1
+        k2 = diff_eq.subs({x: x0 + (step / 2), y: y0 + step * (k1 / 2)})        # Solves for k2
+        k3 = diff_eq.subs({x: x0 + (step / 2), y: y0 + step * (k2 / 2)})        # Solves for k3
+        k4 = diff_eq.subs({x: x0 + step, y: y0 + step * k3})                    # Solves for k4
+        y0 += (step / 6) * (k1 + 2 * k2 + 2 * k3 + k4)                          # Calculates next value using equation: y = (step/6)*(k1+2K2+2K3+k4)
+        x0 += step
+    return y0
+
+
+iterations = int((x_final - x0) / step)
+final_y = RK4(diff_eq, x0, y0, step, x_final)  #Runs function with user defined parameters
+print(" with " + str(iterations) + " steps, the value of f(" + str(x_final) + ") equals = " + str(final_y))
