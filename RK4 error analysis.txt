@@ -1,0 +1,59 @@
+"""
+File: RK4 Error Analysis
+Author: Phoenix Do
+Code: RK4 Error Analysis
+Description: Takes user imputted parameters (intial value for x and y, step size, differential equation, and value for which Euler's method will evaluate) and gives requested value using RK4 and does error analysis up to that point
+Conditions: none
+"""
+from sympy import *
+import math
+
+# User defined parameters
+x = Symbol("x")
+y = Symbol("y")
+diff_eq = 2 * x * y                                                                                         # User defined differntial equation
+x0 = 1                                                                                                      # User defined intial value for x
+y0 = 1                                                                                                      # User defined intial vaule for y
+step = 0.025                                                                                                 # User defined size of step for each iteration
+x_final = 1.5                                                                                               # User defined value which code will approximate to
+real_function = math.e ** ((x ** 2) - 1)
+
+
+
+
+
+def error_analysis_RK4(diff_eq, real_function, x0, y0, step, x_final):
+    print("x       solved  real    difference      % error")                                                # Header
+    x = Symbol("x")
+    y = Symbol("y")
+    x_initial = x0
+    y_initial = y0
+    y_real_initial = real_function.evalf(subs = {x: x_initial, y: y_initial})                               # Solves for the real value of Y at that point
+    if y_initial == y_real_initial:                                                                         # Fixes issue with formatting when y_intial = y_real_intial
+        absolute_difference_initial = 0
+    else:
+        absolute_difference_initial = abs(y_initial - y_real_initial)                                       # Calculates absolute difference between calculated and real Y
+    percent_error_initial = abs(y_initial - y_real_initial) / y_real_initial * 100                          # Calculates percent error between calculated and real Y
+    print(f"{x_initial:.2f}\t{y_initial:.5f}\t{y_real_initial:.5f}\t{absolute_difference_initial:.8f}\t{percent_error_initial}%")
+    iterations = int((x_final - x0) / step)
+
+    for i in range(iterations):
+        k1 = diff_eq.subs({x: x0, y: y0})                                                                   # Solves for k1
+        k2 = diff_eq.subs({x: x0 + (step / 2), y: y0 + step * (k1 / 2)})                                    # Solves for k2
+        k3 = diff_eq.subs({x: x0 + (step / 2), y: y0 + step * (k2 / 2)})                                    # Solves for k3
+        k4 = diff_eq.subs({x: x0 + step, y: y0 + step * k3})                                                # Solves for k4
+        y0 += (step / 6) * (k1 + 2 * k2 + 2 * k3 + k4)                                                      # Calculates next value using equation: y = (step/6)*(k1+2K2+2K3+k4)
+        y_final = y0
+        x0 += step
+        y_real = real_function.evalf(subs = {x: x0, y: y0})                                                 # Solves for the real value of Y at that point
+        absolute_difference = abs(y_final - y_real)                                                         # Calculates absolute difference between calculated and real Y
+        percent_error = abs(y_final - y_real) / y_real * 100                                                # Calculates percent error between calculated and real Y
+        print(f"{x0:.2f}\t{y_final:.5f}\t{y_real:.5f}\t{absolute_difference:.8f}\t{percent_error:.8f}%")
+
+
+error_analysis_RK4(diff_eq, real_function, x0, y0, step, x_final)                                           # Runs error analysis on RK4 method
+
+"""
+The percent error decreases by a factor of 15.2297848 for every time the step size gets doubled
+
+"""
